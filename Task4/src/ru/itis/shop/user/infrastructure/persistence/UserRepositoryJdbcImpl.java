@@ -10,14 +10,11 @@ import java.util.Optional;
 
 public class UserRepositoryJdbcImpl implements UserRepository {
 
-    private static final String DB_URL =
-            "jdbc:postgresql://localhost:5432/java_2026";
+    private static final String DB_URL = "jdbc:postgresql://localhost:5432/java_2026";
 
-    private static final String DB_USER =
-            "postgres";
+    private static final String DB_USER = "postgres";
 
-    private static final String DB_PASSWORD =
-            "d@ta_160";
+    private static final String DB_PASSWORD = "d@ta_160";
 
     @Override
     public List<User> findAll() {
