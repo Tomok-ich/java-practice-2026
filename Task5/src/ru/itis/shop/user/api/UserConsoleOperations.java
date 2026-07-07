@@ -1,0 +1,101 @@
+package ru.itis.shop.user.api;
+
+import ru.itis.shop.user.application.UserService;
+import ru.itis.shop.user.domain.User;
+
+import java.util.List;
+import java.util.Scanner;
+
+public class UserConsoleOperations {
+
+    private final UserService userService;
+    private final Scanner scanner;
+
+    public UserConsoleOperations(UserService userService) {
+        this.userService = userService;
+        this.scanner = new Scanner(System.in);
+    }
+
+    public void showMenu() {
+        printUserMenu();
+
+        String command = scanner.nextLine();
+
+        switch (command) {
+            case "1": {
+                signUp();
+            }
+            break;
+            case "2": {
+                signIn();
+            }
+            break;
+            case "4": {
+                showUsersByProfileDescription();
+            }
+            break;
+            case "0": {
+                System.exit(0);
+            }
+        }
+    }
+
+    private static void printUserMenu() {
+        System.out.println("1. Регистрация пользователя");
+        System.out.println("2. Вход в систему");
+        System.out.println("3. Найти пользователя по id");
+        System.out.println("4. Показать пользователей по profileDescription");
+        System.out.println("0. Выход");
+    }
+
+    private void signUp() {
+        System.out.println("Сейчас будем регистрировать пользователя");
+        System.out.println("Введите name:");
+        String name = scanner.nextLine();
+        System.out.println("Введите email:");
+        String email = scanner.nextLine();
+        System.out.println("Введите password:");
+        String password = scanner.nextLine();
+        System.out.println("Введите profileDescription:");
+        String profileDescription = scanner.nextLine();
+
+        userService.signUp(name, email, password, profileDescription);
+    }
+
+
+    private void signIn() {
+        System.out.println("Вы можете войти в приложение");
+        System.out.println("Введите email:");
+        String email = scanner.nextLine();
+        System.out.println("Введите password:");
+        String password = scanner.nextLine();
+
+        if (userService.signIn(email, password)) {
+            System.out.println("Вы вошли в приложение");
+        } else {
+            System.out.println("email или password не верны");
+        }
+    }
+
+    private void showUsersByProfileDescription() {
+        System.out.println("Введите profileDescription:");
+        String profileDescription = scanner.nextLine();
+        List<User> users = userService.findAllByProfileDescription(profileDescription);
+        if (users.isEmpty()) {
+            System.out.println("Пользователи не найдены.");
+            return;
+        }
+        System.out.println("Найденные пользователи:");
+        users.forEach(new java.util.function.Consumer<User>() {
+            @Override
+            public void accept(User user) {
+                System.out.println("id: " + user.getId());
+                System.out.println("name: " + user.getName());
+                System.out.println("email: " + user.getEmail());
+                System.out.println("profileDescription: " + user.getProfileDescription());
+            }
+        });
+    }
+
+
+}
