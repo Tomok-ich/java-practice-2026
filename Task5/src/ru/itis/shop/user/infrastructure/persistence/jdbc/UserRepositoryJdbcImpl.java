@@ -62,13 +62,13 @@ public class UserRepositoryJdbcImpl implements UserRepository {
     @Override
     public List<User> findAllByProfileDescription(String profileDescription) {
         List<User> users = new ArrayList<>();
-        String sql = "SELECT * FROM account WHERE profile_description = ?";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, profileDescription);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    users.add(userRowMapper.mapRow(resultSet));
+        try (Connection connection = dataSource.getConnection()) {
+            try (Statement statement = connection.createStatement()) {
+                String query = "select * from account where profile_description = '" + profileDescription + "'";
+                try (ResultSet resultSet = statement.executeQuery(query)) {
+                    while (resultSet.next()) {
+                        users.add(userRowMapper.mapRow(resultSet));
+                    }
                 }
             }
         } catch (SQLException e) {
